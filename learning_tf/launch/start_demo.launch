@@ -1,0 +1,31 @@
+<launch>
+	<!-- Turtlesim Node-->
+	<node pkg="turtlesim" type="turtlesim_node" name="sim"/>
+	<node pkg="turtlesim" type="turtle_teleop_key" name="teleop" output="screen"/>
+	
+	<!-- Axes -->
+	<param name="scale_linear" value="2" type="double"/>
+	<param name="scale_angular" value="2" type="double"/>
+
+	<node pkg="learning_tf" type="turtle_tf_broadcaster"
+	      args="/turtle1" name="turtle1_tf_broadcaster"/>
+	<node pkg="learning_tf" type="turtle_tf_broadcaster"
+	      args="/turtle2" name="turtle2_tf_broadcaster"/>
+	
+	<node pkg="learning_tf" type="turtle_tf_listener" name="listener"/>
+	
+	<node pkg="learning_tf" type="frame_tf_broadcaster" 
+	      name="broadcaster_frame"/>
+
+<!-- PYTHON CODE
+	<node name="turtle1_tf_broadcaster" pkg="learning_tf" type="turtle_tf_broadcaster.py" respawn="false" output="screen">
+	      <param name="turtle" type="string" value="turtle1"/>
+	</node>
+	<node name="turtle2_tf_broadcaster" pkg="learning_tf" type="turtle_tf_broadcaster.py" respawn="false" output="screen">
+	      <param name="turtle" type="string" value="turtle2"/>
+	</node>
+	<node pkg="learning_tf" type="turtle_tf_listener.py" name="listener"/>
+	<node pkg="learning_tf" type="fixed_tf_broadcaster.py" name="broadcaster_fixed"/>
+-->
+
+</launch>

@@ -1,0 +1,20 @@
+<package>
+  <name>rosserial_client</name>
+  <version>0.7.1</version>
+  <description>
+    Generalized client side source for rosserial.
+  </description>
+  <author>Michael Ferguson</author>
+  <author>Adam Stambler</author>
+  <maintainer email="paul.bouchier@gmail.com">Paul Bouchier</maintainer>
+  <maintainer email="mpurvis@clearpathrobotics.com">Mike Purvis</maintainer>
+  <license>BSD</license>
+  <url>http://ros.org/wiki/rosserial_client</url>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <run_depend>std_msgs</run_depend>
+  <run_depend>rosserial_msgs</run_depend>
+  <run_depend>rospy</run_depend>
+  <run_depend>tf</run_depend>
+</package>

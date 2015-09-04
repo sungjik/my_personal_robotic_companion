@@ -1,0 +1,10 @@
+<launch>
+  <node pkg="tf" type="static_transform_publisher" name="base_to_kinect_broadcaster" args="-0.115 0 0.226 0 0 0 base_link openni_camera 100" />
+ 
+  <!--we use the kinect sensor as a fake laser scanner /-->
+  <include file="$(find patrick_the_robot)/launch/kinect_laser.launch"/>
+ 
+  <node name="arduino_serial_node" pkg="rosserial_python" type="serial_node.py" output="screen">
+    <param name="port" value="dev/ttyACM0" />
+  </node>
+</launch>
