@@ -7,7 +7,7 @@
   <node name="base_driver_node" pkg="patrick_the_robot" type="base_driver" args="10.0" />
 
   <!-- cmd_vel mux for prioritizing cmd_vel topics /-->
-  <arg name="nodelet_manager_name" value="nodelet_manager"/>
+  <arg name="nodelet_manager_name" value="mux_nodelet_manager"/>
   <arg name="config_file" value="$(find patrick_the_robot)/param/cmd_vel_mux_config.yaml"/>
 
   <node name="$(arg nodelet_manager_name)" pkg="nodelet" type="nodelet" args="manager"/>
