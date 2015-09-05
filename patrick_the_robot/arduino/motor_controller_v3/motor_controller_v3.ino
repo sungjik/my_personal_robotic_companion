@@ -26,7 +26,7 @@
 #define encodPinA2      2
 #define encodPinB2      7
 #define LOOPTIME        10   // PID loop time(ms)
-#define encoder_pulse   132
+#define encoder_pulse   13
 #define gear_ratio      20
 #define wheel_diameter  0.065 //m
 #define wheel_width     0.027 //m
