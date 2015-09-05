@@ -81,7 +81,7 @@ void handle_cmd( const geometry_msgs::Twist& cmd_msg) {
   else direction2 = BACKWARD;
 }
 
-ros::Subscriber<geometry_msgs::Twist> sub("cmd_vel", handle_cmd);
+ros::Subscriber<geometry_msgs::Twist> sub("cmd_vel_mux", handle_cmd);
 geometry_msgs::Vector3Stamped rpm_msg;
 ros::Publisher rpm_pub("rpm", &rpm_msg);
 ros::Time current_time;
