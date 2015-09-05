@@ -26,7 +26,7 @@
 #define encodPinA2      2
 #define encodPinB2      7
 #define LOOPTIME        10   // PID loop time(ms)
-#define encoder_pulse   132
+#define encoder_pulse   13
 #define gear_ratio      20
 #define wheel_diameter  0.065 //m
 #define wheel_width     0.027 //m
@@ -68,12 +68,12 @@ void handle_cmd( const geometry_msgs::Twist& cmd_msg) {
   }
   else if (x == 0) {
     // convert rad/s to rpm
-    rpm_req2 = z*axis_length*60/(2*pi*2);
+    rpm_req2 = z*axis_length*60/(wheel_diameter*pi*2);
     rpm_req1 = -rpm_req2;
   }
   else {
-    rpm_req1 = x*60/(pi*wheel_diameter)-z*axis_length*60/(2*pi*2);
-    rpm_req2 = x*60/(pi*wheel_diameter)+z*axis_length*60/(2*pi*2);
+    rpm_req1 = x*60/(pi*wheel_diameter)-z*axis_length*60/(wheel_diameter*pi*2);
+    rpm_req2 = x*60/(pi*wheel_diameter)+z*axis_length*60/(wheel_diameter*pi*2);
   }
   if (rpm_req1 >= 0) direction1 = FORWARD;
   else direction1 = BACKWARD;

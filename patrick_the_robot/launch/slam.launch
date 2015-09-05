@@ -5,7 +5,7 @@
         <!--remap from="scan" to="base_scan"/-->
         <param name="base_frame" value="/base_link" />
         <param name="odom_frame" value="/odom" />
-        <param name="map_update_interval" value="1.0"/>
+        <param name="map_update_interval" value="2.0"/>
         <param name="maxUrange" value="6.0"/>
         <param name="sigma" value="0.05"/>
         <param name="kernelSize" value="1"/>
@@ -23,7 +23,7 @@
         <param name="angularUpdate" value="0.262"/>   <!--param name="angularUpdate" value="0.436"/-->
         <param name="temporalUpdate" value="-1.0"/>
         <param name="resampleThreshold" value="0.5"/>
-        <param name="particles" value="100"/>
+        <param name="particles" value="30"/>
         <param name="xmin" value="-50.0"/>
         <param name="ymin" value="-50.0"/>
         <param name="xmax" value="50.0"/>

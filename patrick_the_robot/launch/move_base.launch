@@ -1,0 +1,20 @@
+<launch>
+  <master auto="start"/>
+
+  <!-- Run config launch -->
+  <include file="$(find patrick_the_robot)/launch/patrick_config.launch" />
+
+  <!-- Run the map server -->
+  <node name="map_server" pkg="map_server" type="map_server" args="$(find patrick_the_robot)/maps/map.pgm 0.05"/>
+
+  <!--- Run AMCL -->
+  <include file="$(find amcl)/examples/amcl_diff.launch" />
+
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <rosparam file="$(find patrick_the_robot)/param/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find patrick_the_robot)/param/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find patrick_the_robot)/param/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find patrick_the_robot)/param/global_costmap_params.yaml" command="load" />
+    <rosparam file="$(find patrick_the_robot)/param/base_local_planner_params.yaml" command="load" />
+  </node>
+</launch>
