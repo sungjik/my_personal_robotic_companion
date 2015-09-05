@@ -53,7 +53,7 @@ int main(int argc, char** argv){
       ros::spinOnce();               // check for incoming messages
       //compute odometry in a typical way given the velocities of the robot
       dxy_ave = (rpm_act1+rpm_act2)*dt*wheel_diameter*pi/(60*2);
-      dth = (rpm_act1-rpm_act2)*dt*wheel_diameter*pi/(60*axis_length);
+      dth = (rpm_act2-rpm_act1)*dt*wheel_diameter*pi/(60*axis_length);
       dx = cos(dth) * dxy_ave;
       dy = -sin(dth) * dxy_ave;
       x_pos += (cos(theta) * dx - sin(theta) * dy);
