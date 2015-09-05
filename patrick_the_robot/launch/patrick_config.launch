@@ -6,6 +6,17 @@
   
   <node name="base_driver_node" pkg="patrick_the_robot" type="base_driver" args="10.0" />
 
+  <!-- cmd_vel mux for prioritizing cmd_vel topics /-->
+  <arg name="nodelet_manager_name" value="nodelet_manager"/>
+  <arg name="config_file" value="$(find patrick_the_robot)/param/cmd_vel_mux_config.yaml"/>
+
+  <node name="$(arg nodelet_manager_name)" pkg="nodelet" type="nodelet" args="manager"/>
+  <include file="$(find yocs_cmd_vel_mux)/launch/cmd_vel_mux.launch">
+    <arg name="nodelet_manager_name" value="$(arg nodelet_manager_name)"/>
+    <arg name="config_file" value="$(arg config_file)"/>
+  </include>
+
+  <!--serial communication between arduino and pc via usb /-->
   <node name="arduino_serial_node" pkg="rosserial_python" type="serial_node.py" output="screen">
     <param name="port" value="/dev/ttyACM0" />
     <param name="baud" value="57600" />
