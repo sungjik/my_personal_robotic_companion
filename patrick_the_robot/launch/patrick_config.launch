@@ -1,5 +1,5 @@
 <launch>
-  <node pkg="tf" type="static_transform_publisher" name="base_to_kinect_broadcaster" args="0.18 0 0.16 0 0 0 \/base_link \/camera_link 100" />
+  <node pkg="tf" type="static_transform_publisher" name="base_to_kinect_broadcaster" args="-0.18 0 0.16 0 0 0 \/base_link \/camera_link 100" />
  
   <!--we use the kinect sensor as a fake laser scanner /-->
   <include file="$(find patrick_the_robot)/launch/kinect_laser.launch" />
