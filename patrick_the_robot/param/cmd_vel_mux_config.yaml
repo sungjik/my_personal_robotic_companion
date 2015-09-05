@@ -1,12 +1,12 @@
 subscribers:
  - name: "teleop_keyboard"
-   topic: "input/teleop_cmd_vel"
+   topic: "teleop_cmd_vel"
    timeout: 0.2
    priority: 0
 
 - name: "default"
-  topic: "input/default"
+  topic: "cmd_vel"
   timeout: 0.2
   priority: 1
 
-publisher: "output/cmd_vel":
+publisher: "cmd_vel_mux":
