@@ -7,7 +7,6 @@ from geometry_msgs.msg import Twist
 import sys, select, termios, tty
 
 msg = """
-Reading from the keyboard  and Publishing to Twist!
 ---------------------------
 Moving around:
    u    i    o
@@ -49,11 +48,12 @@ def getKey():
 	termios.tcsetattr(sys.stdin, termios.TCSADRAIN, settings)
 	return key
 
-speed = 0.01
-turn = 1
+speed = 0.1
+turn = 0.25
+
 
 def vels(speed,turn):
-	return "currently:\tspeed %s\tturn %s " % (speed,turn)
+	return "\ncurrently:\tspeed %s\tturn %s \n" % (speed,turn)
 
 if __name__=="__main__":
     	settings = termios.tcgetattr(sys.stdin)

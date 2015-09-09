@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
   tf
+  sensor_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -83,7 +84,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
+  INCLUDE_DIRS include
 #  LIBRARIES patrick_the_robot
 #  CATKIN_DEPENDS geometry_msgs roscpp rospy std_msgs
 #  DEPENDS system_lib
@@ -95,7 +96,7 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-# include_directories(include)
+include_directories(arduino/motor_controller_v3)
 include_directories(
   ${catkin_INCLUDE_DIRS}
 )
@@ -166,4 +167,6 @@ include_directories(
 # catkin_add_nosetests(test)
 
 add_executable(base_driver src/base_driver.cpp)
+add_executable(laser_buffer src/laser_buffer.cpp)
 target_link_libraries(base_driver ${catkin_LIBRARIES})
+target_link_libraries(laser_buffer ${catkin_LIBRARIES})

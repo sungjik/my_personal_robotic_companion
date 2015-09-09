@@ -3,26 +3,27 @@
 #include <nav_msgs/Odometry.h>
 #include <geometry_msgs/Vector3.h>
 #include <stdio.h>
+#include <robot_specs.h>
 
-#define wheel_diameter  0.065 //m
-#define wheel_width     27
-#define axis_length     0.21  //m
-#define max_RPM         298
-#define pi              3.14159265
-
-int rpm_act1 = 0;
-int rpm_act2 = 0;
+double rpm_act1 = 0.0;
+double rpm_act2 = 0.0;
+double rpm_req1 = 0.0;
+double rpm_req2 = 0.0;
 float x_pos = 0.0;
 float y_pos = 0.0;
 float theta = 0.0;
-ros::Time current_time, last_time;
+ros::Time current_time;
+ros::Time rpm_time(0.0);
+ros::Time last_time(0.0);
 double dt = 0.0;
+int received_new_cmd = 0;
+float correction_factor = 0.97;
 
 void handle_rpm( const geometry_msgs::Vector3Stamped& rpm) {
-  rpm_act1 = int(rpm.vector.x);
-  rpm_act2 = int(rpm.vector.y);
-  dt = double(rpm.vector.z);
-  current_time = rpm.header.stamp;
+  rpm_act1 = rpm.vector.x;
+  rpm_act2 = rpm.vector.y;
+  dt = rpm.vector.z;
+  rpm_time = rpm.header.stamp;
 }
 
 int main(int argc, char** argv){
@@ -43,23 +44,27 @@ int main(int argc, char** argv){
   double vth = 0.0;
   char base_link[] = "/base_link";
   char odom[] = "/odom";
-  current_time = ros::Time::now();
-
+  ros::Duration d(1.0);
+  
   if (argc > 1)  sscanf(argv[1], "%f", &rate); 
+  if (argc > 2)  sscanf(argv[2], "%f", &correction_factor);
   ros::Rate r(rate);
-
   while(n.ok()){
-    // if(dt > 0.0) {
-      ros::spinOnce();               // check for incoming messages
-      //compute odometry in a typical way given the velocities of the robot
-      dxy_ave = (rpm_act1+rpm_act2)*dt*wheel_diameter*pi/(60*2);
-      dth = (rpm_act2-rpm_act1)*dt*wheel_diameter*pi/(60*axis_length);
-      dx = cos(dth) * dxy_ave;
-      dy = -sin(dth) * dxy_ave;
-      x_pos += (cos(theta) * dx - sin(theta) * dy);
-      y_pos += (sin(theta) * dx + cos(theta) * dy);
-      theta += dth;
+    ros::spinOnce();
+    ros::topic::waitForMessage<geometry_msgs::Vector3Stamped>("rpm", n, d);
+    current_time = ros::Time::now();
+    dt = correction_factor*(current_time-last_time).toSec();
+    dxy_ave = (rpm_act1+rpm_act2)*dt*wheel_diameter*pi/(60*2);
+    dth = (rpm_act2-rpm_act1)*dt*wheel_diameter*pi/(60*track_width);
+    dx = cos(dth) * dxy_ave;
+    dy = -sin(dth) * dxy_ave;
+    x_pos += (cos(theta) * dx - sin(theta) * dy);
+    y_pos += (sin(theta) * dx + cos(theta) * dy);
+    theta += dth;
 
+    if(theta >= two_pi) theta -= two_pi;
+    if(theta <= -two_pi) theta += two_pi;
+ 
     geometry_msgs::TransformStamped t;
     geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(theta);
     t.header.frame_id = odom;
@@ -80,14 +85,16 @@ int main(int argc, char** argv){
     odom_msg.pose.pose.position.z = 0.0;
     odom_msg.pose.pose.orientation = odom_quat;
 
+    vx = (dt == 0)?  0 : dxy_ave/dt;
+    vth = (dt == 0)? 0 : dth/dt;
+
     odom_msg.child_frame_id = base_link;
-    odom_msg.twist.twist.linear.x = dxy_ave/dt;
+    odom_msg.twist.twist.linear.x = vx;
     odom_msg.twist.twist.linear.y = 0;
-    odom_msg.twist.twist.angular.z = dth/dt;
+    odom_msg.twist.twist.angular.z = vth;
 
     odom_pub.publish(odom_msg);
-    dt = 0.0;
+    last_time = current_time;
     r.sleep();
-    //  }
   }
 }
