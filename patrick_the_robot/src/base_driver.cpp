@@ -80,13 +80,18 @@ int main(int argc, char** argv){
     odom_msg.pose.pose.position.z = 0.0;
     odom_msg.pose.pose.orientation = odom_quat;
 
+    vx = (dt == 0)?  0 : dxy_ave/dt;
+    vth = (dt == 0)? 0 : dth/dt;
+ 
     odom_msg.child_frame_id = base_link;
-    odom_msg.twist.twist.linear.x = dxy_ave/dt;
+    odom_msg.twist.twist.linear.x = vx;
     odom_msg.twist.twist.linear.y = 0;
-    odom_msg.twist.twist.angular.z = dth/dt;
+    odom_msg.twist.twist.angular.z = vth;
 
     odom_pub.publish(odom_msg);
     dt = 0.0;
+    rpm_act1 = 0.0;
+    rpm_act2 = 0.0;
     r.sleep();
     //  }
   }
