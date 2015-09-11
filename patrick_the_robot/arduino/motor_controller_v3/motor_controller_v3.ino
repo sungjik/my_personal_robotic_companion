@@ -15,6 +15,7 @@
 #include <geometry_msgs/Vector3Stamped.h>
 #include <geometry_msgs/Twist.h>
 #include <ros/time.h>
+#include "robot_specs.h"
 
 //Motor Shield headers
 #include <Wire.h>
@@ -25,14 +26,7 @@
 #define encodPinB1      8     // encoder B pin
 #define encodPinA2      2
 #define encodPinB2      7
-#define LOOPTIME        10   // PID loop time(ms)
-#define encoder_pulse   13
-#define gear_ratio      20
-#define wheel_diameter  0.065 //m
-#define wheel_width     0.027 //m
-#define axis_length     0.21  //m
-#define max_RPM         298
-#define pi              3.14159265
+#define LOOPTIME        100   // PID loop time(ms)
 
 // Create the motor shield object with the default I2C address
 Adafruit_MotorShield AFMS = Adafruit_MotorShield(); 
@@ -41,26 +35,27 @@ Adafruit_DCMotor *motor1 = AFMS.getMotor(1);
 Adafruit_DCMotor *motor2 = AFMS.getMotor(2);
 
 unsigned long lastMilli = 0;       // loop timing 
-unsigned long lastMilliPrint = 0;
 unsigned long lastMilliPub = 0;
-int rpm_req1 = 0;
-int rpm_req2 = 0;
-int rpm_act1 = 0;
-int rpm_act2 = 0;
+double rpm_req1 = 0;
+double rpm_req2 = 0;
+double rpm_act1 = 0;
+double rpm_act2 = 0;
 int direction1 = FORWARD;
 int direction2 = FORWARD;
 int PWM_val1 = 0;                  // (25% = 64; 50% = 127; 75% = 191; 100% = 255)
 int PWM_val2 = 0;
 volatile long count1 = 0;          // rev counter
 volatile long count2 = 0;
+long countAnt1 = 0;
+long countAnt2 = 0;
 float Kp =   1;                    // PID proportional control Gain
-float Kd =   0.5;                    // PID Derivitave control gain
+float Kd =   0.4;                    // PID Derivitave control gain
 
 ros::NodeHandle nh;
 
 void handle_cmd( const geometry_msgs::Twist& cmd_msg) {
-  float x = cmd_msg.linear.x;
-  float z = cmd_msg.angular.z;
+  double x = cmd_msg.linear.x;
+  double z = cmd_msg.angular.z;
   if (z == 0) {     // go straight
     // convert m/s to rpm
     rpm_req1 = x*60/(pi*wheel_diameter);
@@ -68,17 +63,20 @@ void handle_cmd( const geometry_msgs::Twist& cmd_msg) {
   }
   else if (x == 0) {
     // convert rad/s to rpm
-    rpm_req2 = z*axis_length*60/(wheel_diameter*pi*2);
+    rpm_req2 = z*track_width*60/(wheel_diameter*pi*2);
     rpm_req1 = -rpm_req2;
   }
   else {
-    rpm_req1 = x*60/(pi*wheel_diameter)-z*axis_length*60/(wheel_diameter*pi*2);
-    rpm_req2 = x*60/(pi*wheel_diameter)+z*axis_length*60/(wheel_diameter*pi*2);
+    rpm_req1 = x*60/(pi*wheel_diameter)-z*track_width*60/(wheel_diameter*pi*2);
+    rpm_req2 = x*60/(pi*wheel_diameter)+z*track_width*60/(wheel_diameter*pi*2);
   }
-  if (rpm_req1 >= 0) direction1 = FORWARD;
-  else direction1 = BACKWARD;
-  if (rpm_req2 >= 0) direction2 = FORWARD;
-  else direction2 = BACKWARD;
+  if (rpm_req1 > 0) direction1 = FORWARD;
+  else if (rpm_req1 < 0) direction1 = BACKWARD;
+  else direction1 = RELEASE;
+  
+  if (rpm_req2 > 0) direction2 = FORWARD;
+  else if (rpm_req2 < 0) direction2 = BACKWARD;
+  else direction2 = RELEASE;
 }
 
 ros::Subscriber<geometry_msgs::Twist> sub("cmd_vel_mux", handle_cmd);
@@ -89,7 +87,16 @@ ros::Time last_time;
 
 void setup() {
  AFMS.begin();  // create with the default frequency 1.6KHz
-
+ count1 = 0;
+ count2 = 0;
+ countAnt1 = 0;
+ countAnt2 = 0;
+ rpm_req1 = 0;
+ rpm_req2 = 0;
+ rpm_act1 = 0;
+ rpm_act2 = 0;
+ PWM_val1 = 0;
+ PWM_val2 = 0;
  nh.initNode();
  nh.getHardware()->setBaud(57600);
  nh.subscribe(sub);
@@ -106,6 +113,12 @@ void setup() {
  digitalWrite(encodPinA2, HIGH);                // turn on pullup resistor
  digitalWrite(encodPinB2, HIGH);
  attachInterrupt(0, rencoder2, FALLING);
+ motor1->setSpeed(0);
+ motor2->setSpeed(0);
+ motor1->run(FORWARD);
+ motor1->run(RELEASE);
+ motor2->run(FORWARD);
+ motor2->run(RELEASE);
 }
 
 void loop() {
@@ -119,38 +132,36 @@ void loop() {
     motor2->setSpeed(PWM_val2);
     motor1->run(direction1);
     motor2->run(direction2);
+    publishRPM(time-lastMilli);
     lastMilli = time;
   }
-  if(time-lastMilliPub >= LOOPTIME*10) {
-    publishRPM(time-lastMilliPub);
+  if(time-lastMilliPub >= LOOPTIME) {
+  //  publishRPM(time-lastMilliPub);
     lastMilliPub = time;
   }
- //printMotorInfo();                          // display data
 }
 
-void getMotorData(unsigned long time)  {      // calculate speed, volts and Amps
- static long countAnt1 = 0;                   // last count
- static long countAnt2 = 0;
- rpm_act1 = ((count1 - countAnt1)*(60*(1000/time)))/(encoder_pulse*gear_ratio);
- rpm_act2 = ((count2 - countAnt2)*(60*(1000/time)))/(encoder_pulse*gear_ratio);
+void getMotorData(unsigned long time)  {
+ rpm_act1 = double((count1-countAnt1)*60*1000)/double(time*encoder_pulse*gear_ratio);
+ rpm_act2 = double((count2-countAnt2)*60*1000)/double(time*encoder_pulse*gear_ratio);
  countAnt1 = count1;
  countAnt2 = count2;
 }
 
-int updatePid1(int command, int targetValue, int currentValue) {
-float pidTerm = 0;                            // PID correction
-int error=0;                                  
-static int last_error1=0;                             
+int updatePid1(int command, double targetValue, double currentValue) {
+double pidTerm = 0;                            // PID correction
+double error=0;                                  
+static double last_error1=0;                             
  error = abs(targetValue) - abs(currentValue); 
  pidTerm = (Kp * error) + (Kd * (error - last_error1));                            
  last_error1 = error;
  return constrain(command + int(pidTerm), 0, 255);
 }
 
-int updatePid2(int command, int targetValue, int currentValue) {
-float pidTerm = 0;                            // PID correction
-int error=0;                                  
-static int last_error2=0;                             
+int updatePid2(int command, double targetValue, double currentValue) {
+double pidTerm = 0;                            // PID correction
+double error=0;                                  
+static double last_error2=0;                             
  error = abs(targetValue) - abs(currentValue); 
  pidTerm = (Kp * error) + (Kd * (error - last_error2));                            
  last_error2 = error;
@@ -158,8 +169,8 @@ static int last_error2=0;
 }
 
 void publishRPM(unsigned long time) {
-  int signed_rpm_act1 = 0;
-  int signed_rpm_act2 = 0;
+  double signed_rpm_act1 = 0;
+  double signed_rpm_act2 = 0;
 
   if(direction1 == FORWARD) signed_rpm_act1 = rpm_act1;
   else signed_rpm_act1 = -rpm_act1;
@@ -175,29 +186,12 @@ void publishRPM(unsigned long time) {
   nh.spinOnce();
 }
 
-void printMotorInfo()  {                                                      // display data
- if((millis()-lastMilliPrint) >= 1000)   {                     
-   lastMilliPrint = millis();
-   Serial.print("required RPM:");   Serial.print(rpm_req1);
-   Serial.println("");
-   Serial.print("  motor1 RPM:");   Serial.print(rpm_act1);
-   Serial.println("");
-   Serial.print("  motor1 PWM:");   Serial.print(PWM_val1);
-   Serial.println("");
-   Serial.print("  motor2 RPM:");   Serial.print(rpm_act2);
-   Serial.println("");
-   Serial.print("  motor2 PWM:");   Serial.print(PWM_val2);
-   Serial.println("");
-   Serial.println("-------------");
- }
+void rencoder1()  {
+  if (PINB & 0b00000001)    count1--;                // if(digitalRead(encodPinB1)==HIGH)   count ++;
+  else                      count1++;                // if (digitalRead(encodPinB1)==LOW)   count --;
 }
 
-void rencoder1()  {                                 // pulse and direction, direct port reading to save cycles
- if (PINB & 0b00000001)    count1--;                // if(digitalRead(encodPinB1)==HIGH)   count ++;
- else                      count1++;                // if (digitalRead(encodPinB1)==LOW)   count --;                    count2--;                // if (digitalRead(encodPinB2)==LOW)   count --;
-}
-
-void rencoder2()  {                                 // pulse and direction, direct port reading to save cycles                  count1--;                // if (digitalRead(encodPinB1)==LOW)   count --;
- if (PIND & 0b10000000)    count2--;                // if(digitalRead(encodPinB2)==HIGH)   count ++;
- else                      count2++;                // if (digitalRead(encodPinB2)==LOW)   count --;
+void rencoder2()  {
+  if (PIND & 0b10000000)    count2--;                // if(digitalRead(encodPinB2)==HIGH)   count ++;
+  else                      count2++;                // if (digitalRead(encodPinB2)==LOW)   count --;
 }

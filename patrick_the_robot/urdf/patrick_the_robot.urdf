@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+  <robot name="patrick_the_robot">
+    <link name="base_link">
+      <visual>
+        <geometry>
+          <box size="0.31 0.14 0.13"/>
+        </geometry>
+        <origin rpy="0 0 0" xyz="-0.23 -0.07 0"/>
+        <material name="white">
+          <color rgba="1 1 1 1"/>
+        </material>
+      </visual>
+    </link>
+
+    <link name="wheel_left">
+      <visual>
+        <geometry>
+          <cylinder length="0.027" radius="0.0325"/>
+        </geometry>
+        <origin rpy="0 1.57 0" xyz="0 0.14 -0.0325"/>
+          <material name="black">
+            <color rgba="0 0 0 1"/>
+          </material>
+      </visual>
+    </link>
+
+    <link name="wheel_right">
+      <visual>
+        <geometry>
+          <cylinder length="0.027" radius="0.0325"/>
+        </geometry>
+        <origin rpy="0 1.57 0" xyz="0 -0.14 -0.0325"/>
+          <material name="black"/>
+      </visual>
+    </link>
+
+    <link name="kinect">
+      <visual>
+        <geometry>
+          <box size="0.06 0.28 0.04"/>
+        </geometry>
+        <origin rpy="0 0 0" xyz="-0.18 0 0.1875/>
+        <material name="black"/>
+      </visual>
+    </link>
+
+    <link name="laptop">
+      <visual>
+        <geometry>
+          <box size="0.38 0.25 0.03"/>
+        </geometry>
+        <origin rpy="-0.17 -0.175 0.13"/>
+        <material name="gray">
+          <color rgba="0 0 0 0.3"/>
+        </material>
+      </visual>
+    </link>
+
+    <joint name="base_to_wheel_left" type="fixed">
+      <parent link="base_link"/>
+      <child link="wheel_left"/>
+      <origin xyz="0 0 0"/>
+    </joint>
+
+    <joint name="base_to_wheel_right" type="fixed">
+      <parent link="base_link"/>
+      <child link="wheel_right"/>
+      <origin xyz="0 0 0"/>
+    </joint>
+
+    <joint name="base_to_kinect" type="fixed">
+      <parent link="base_link"/>
+      <child link="kinect"/>
+      <origin xyz="0 0 0"/>
+    </joint>
+
+    <joint name="base_to_laptop" type="fixed">
+      <parent link="base_link"/>
+      <child link="laptop"/>
+      <origin xyz="0 0 0"/>
+    </joint>
+  </robot>
