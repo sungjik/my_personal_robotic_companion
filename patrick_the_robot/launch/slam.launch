@@ -5,8 +5,9 @@
         <!--remap from="scan" to="base_scan"/-->
         <param name="base_frame" value="/base_link" />
         <param name="odom_frame" value="/odom" />
-        <param name="map_update_interval" value="2.0"/>
-        <param name="maxUrange" value="6.0"/>
+        <param name="map_update_interval" value="3.0"/>
+        <param name="maxUrange" value="3.7"/>
+        <param name="maxRange" value="4.0"/>
         <param name="sigma" value="0.05"/>
         <param name="kernelSize" value="1"/>
         <param name="lstep" value="0.05"/>

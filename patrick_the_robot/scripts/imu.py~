@@ -1,0 +1,155 @@
+#!/usr/bin/env python
+#credits : http://forum.arduino.cc/index.php/topic,8573.0.html
+
+import rospy
+import socket
+import math
+import tf
+from sensor_msgs.msg import Imu
+
+host="192.168.42.7"
+port=5555
+roll = 0.0
+pitch = 0.0
+yaw = 0.0
+gyro_x = 0.0
+gyro_y = 0.0
+gyro_z = 0.0
+grav_x = 0.0
+grav_y = 0.0
+grav_z = 0.0
+mag_x = 0.0
+mag_y = 0.0
+mag_z = 0.0
+grav_x_filt = 0.0
+grav_y_filt = 0.0
+grav_z_filt = 0.0
+mag_x_filt = 0.0
+mag_y_filt = 0.0
+mag_z_filt = 0.0
+gyro_x_offset = 0.0
+gyro_y_offset = 0.0
+gyro_z_offset = 0.0
+grav_x_offset = 0.0
+grav_y_offset = 0.0
+grav_z_offset = 0.0
+mag_x_min = 10000
+mag_y_min = 10000
+mag_z_min = 10000
+mag_x_max = 0
+mag_y_max = 0
+mag_z_max = 0
+mag_x_map = 0.0
+mag_y_map = 0.0
+mag_z_map = 0.0
+num_itrs = 60
+pub_freq = 10
+alpha = 0.4
+
+def map_min_max(x, in_min, in_max, out_min, out_max):
+    return (long(x)-long(in_min))*(long(out_max)-long(out_min))/(long(in_max)-long(in_min))+long(out_min)
+
+def callibrate(sock):
+    rospy.loginfo("callibrating accelerometer and gyroscope readings...\n")
+    for i in range(0, num_itrs):
+        data,addr = sock.recvfrom(1024)
+        line = data.split(',')
+        gyro_x_offset = gyro_x_offset + float(line[6])
+        gyro_y_offset = gyro_y_offset + float(line]7])
+        gyro_z_offset = gyro_z_offset + float(line[8])
+        grav_x_offset = grav_x_offset + float(line[14])
+        grav_y_offset = grav_y_offset + float(line[15])
+        grav_z_offset = grav_z_offset +  float(line[16])
+    gyro_x_offset = gyro_x_offset / num_iters
+    gyro_y_offset = gyro_y_offset / num_iters
+    gyro_z_offset = gyro_z_offset / num_iters
+    grav_x_offset = grav_x_offset / num_itrs
+    grav_y_offset = grav_y_offset / num_itrs
+    grav_z_offset = grav_z_offset / num_itrs
+    rospy.loginfo("finished callibrating\n")
+
+def imu_publisher(sock):
+    pub = rospy.Publisher('imu', Imu, queue_size=50)
+    rospy.init_node('imu_publisher', anonymous=True)
+    rate = rospy.Rate(pub_freq)
+
+    callibrate(sock)
+
+    while not rospy.is_shutdown():
+        data,addr = sock.recvfrom(1024)
+        line = data.split(',')
+        if len(line) == 17:
+            #received complete packet
+            accel_x = float(line[2]) #m/s^2
+            accel_y = float(line[3])
+            accel_z = float(line[4])
+            gyro_x = float(line[6])  #rad/s
+            gyro_y = float(line[7])
+            gyro_z = float(line[8])
+            mag_x = float(line[10])
+            mag_y = float(line[11])
+            mag_z = float(line[12])
+            grav_x = float(line[14]) - grav_x_offset
+            grav_y = float(line[15]) - grav_y_offset
+            grav_z = float(line[16]) - grav_z_offset
+
+            #filter grav and mag readings with low pass filter
+            grav_x_filt = grav_x_filt + alpha * (grav_x - grav_x_filt)
+            grav_y_filt = grav_y_filt + alpha * (grav_y - grav_y_filt)
+            grav_z_filt = grav_z_filt + alpha * (grav_z - grav_z_filt)
+            
+            mag_x_filt = mag_x_filt + alpha * (mag_x - mag_x_filt)
+            mag_y_filt = mag_y_filt + alpha * (mag_y - mag_y_filt)
+            mag_z_filt = mag_z_filt + alpha * (mag_z - mag_z_filt)
+
+            #get azimuth for magnetometer readings
+            mag_x_max = max(mag_x_max, long(mag_x_filt))
+            mag_y_max = max(mag_y_max, long(mag_y_filt))
+            mag_z_max = max(mag_z_max, long(mag_z_filt))
+
+            mag_x_min = min(mag_x_min, long(mag_x_filt))
+            mag_y_min = min(mag_y_min, long(mag_y_filt))
+            mag_z_min = min(mag_z_min, long(mag_z_filt))
+            
+            mag_x_map = map_min_max(mag_x_filt, mag_x_min, mag_x_max, -10000, 10000)/10000.0
+            mag_y_map = map_min_max(mag_y_filt, mag_y_min, mag_y_max, -10000, 10000)/10000.0
+            mag_z_map = map_min_max(mag_z_filt, mag_z_min, mag_z_max, -10000, 10000)/10000.0
+
+            #normalize grav and mag readings
+            grav_norm = sqrt(pow(grav_x_filt,2)+pow(grav_y_filt,2)+pow(grav_z_filt,2))
+            grav_x_filt = grav_x_filt/grav_norm
+            grav_y_filt = grav_y_filt/grav_norm
+            grav_z_filt = grav_z_filt/grav_norm 
+
+            mag_norm = sqrt(pow(mag_x_map,2)+pow(mag_y_map,2)+pow(mag_z_map,2))
+            mag_x_map = mag_x_map/mag_norm
+            mag_y_map = mag_y_map/mag_norm
+            mag_z_map = mag_z_map/mag_norm
+
+            #calculate roll pitch yaw
+            pitch = atan2(grav_x_filt, sqrt(pow(grav_y_filt,2) + pow(grav_z_filt,2)))
+            roll  = atan2(grav_y_filt, sqrt(pow(grav_x_filt,2) + pow(grav_z_filt,2)))
+            yaw   = atan2(-mag_y_map*cos(roll)+mag_z_map*sin(roll), 
+                           mag_x_map*cos(pitch)+mag_z_map*sin(pitch)*sin(roll)+mag_z_map*sin(pitch)*cos(roll))
+            imu_msg = sensor_msgs.msg.Imu()
+            imu_msg.header.stamp = rospy.Time.now()
+            imu_msg.header.frame_id = 'base_link'
+            q = tf.transformations.quaternion_from_euler(roll, pitch, yaw)
+            imu_msg.orientation.x = q[0]
+            imu_msg.orientation.y = q[1]
+            imu_msg.orientation.z = q[2]
+            imu_msg.orientation.w = q[3]
+            pub.publish(imu_msg)
+            rate.sleep()
+        else:
+            rospy.loginfo("received incomplete UDP packet from android IMU\n")
+            continue
+             
+
+if __name__ == '__main__':
+    try:
+        sock=socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        sock.bind((host,port))
+        imu_publisher(sock)
+    except rospy.ROSInterruptException:
+        pass
