@@ -3,7 +3,7 @@
 import socket
 
 
-host="192.168.42.7"
+host="192.168.42.185"
 port=5555
 
   
