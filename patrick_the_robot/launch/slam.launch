@@ -1,13 +1,13 @@
 <launch>
-    <include file="$(find patrick_the_robot)/launch/patrick_config.launch"/>
+    <include file="$(find patrick_the_robot)/launch/patrick_urdf.launch"/>
  
     <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" output="screen">
         <!--remap from="scan" to="base_scan"/-->
         <param name="base_frame" value="/base_link" />
         <param name="odom_frame" value="/odom" />
-        <param name="map_update_interval" value="3.0"/>
-        <param name="maxUrange" value="3.7"/>
-        <param name="maxRange" value="4.0"/>
+        <param name="map_update_interval" value="2.0"/>
+        <param name="maxUrange" value="5.0"/>
+        <!--param name="maxRange" value="4.0"/-->
         <param name="sigma" value="0.05"/>
         <param name="kernelSize" value="1"/>
         <param name="lstep" value="0.05"/>
@@ -37,4 +37,6 @@
         <param name="lasamplestep" value="0.005"/>
         <param name="transform_publish_period" value="0.1"/>
     </node>
+
+    <node pkg="rviz" name="rviz" type="rviz" args="-d $(find patrick_the_robot)/launch/rviz/slam.rviz"/>
 </launch>

@@ -7,6 +7,5 @@
   <param name="use_gui" value="False"/>
 
   <!--node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"/-->
-  <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher"/>
-  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find patrick_the_robot)/launch/amcl.rviz"/>  
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher"/> 
 </launch>

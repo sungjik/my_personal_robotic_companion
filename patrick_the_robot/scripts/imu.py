@@ -38,6 +38,7 @@ def imu_publisher(sock):
     mag_z_filt = 0.0
     count = 0
     num_callibration_itrs = 60
+    debug = False
 
     pub = rospy.Publisher('imu', Imu, queue_size=50)
     rospy.init_node('imu_publisher', anonymous=True)
@@ -46,6 +47,9 @@ def imu_publisher(sock):
         num_callibration_itrs = rospy.get_param('~num_callibration_itrs')
     if rospy.has_param('~host'):
         host = rospy.get_param('~host')
+    if rospy.has_param('~debug'):
+        debug = rospy.get_param('~debug')
+
     sock.bind((host,port))
 
     current_time = rospy.Time.now()
@@ -115,7 +119,7 @@ def imu_publisher(sock):
 
             roll_gyro += dt*(gyro_x_filt - gyro_x_offset)
             pitch_gyro += dt*(gyro_y_filt - gyro_y_offset)
-            yaw_gyro += dt*(gyro_z)
+            yaw_gyro += dt*(gyro_z - gyro_z_offset)
 
             #callibrate roll pitch yaw
             #roll = roll_gyro
@@ -146,15 +150,17 @@ def imu_publisher(sock):
                     yaw -= 2*pi
                 if yaw < -pi:
                     yaw += 2*pi
-                print int(roll*180/pi), int(pitch*180/pi), int(yaw*180/pi)
+                if debug:
+                    rospy.loginfo('roll %s pitch %s yaw %s', int(roll*180/pi), int(pitch*180/pi), int(yaw*180/pi))
                 imu_msg = Imu()
                 imu_msg.header.stamp = rospy.Time.now()
                 imu_msg.header.frame_id = '/base_link'
-                q = tf.transformations.quaternion_from_euler(roll, pitch, yaw)
+                q = tf.transformations.quaternion_from_euler(0.0, 0.0, yaw)
                 imu_msg.orientation.x = q[0]
                 imu_msg.orientation.y = q[1]
                 imu_msg.orientation.z = q[2]
                 imu_msg.orientation.w = q[3]
+                imu_msg.orientation_covariance = [1e6, 0, 0, 0, 1e6, 0, 0, 0, 1e-6]
                 imu_msg.angular_velocity_covariance[0] = -1
                 imu_msg.linear_acceleration_covariance[0] = -1
                 pub.publish(imu_msg)
