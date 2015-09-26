@@ -1,14 +1,16 @@
 <launch>
   <master auto="start"/>
 
+  <!-- Run patrick -->
+  <include file="$(find patrick_the_robot)/launch/patrick_urdf.launch" />
   <!-- Run the map server -->
-  <node name="map_server" pkg="map_server" type="map_server" args="$(find patrick_the_robot)/maps/map3.yaml 0.05"/>
+  <node name="map_server" pkg="map_server" type="map_server" args="$(find patrick_the_robot)/maps/map3.pgm 0.05"/>
 
   <!-- Run AMCL -->
-  <include file="$(find patrick_the_robot)/launch/amcl_diff.launch" />
+  <include file="$(find amcl)/examples/amcl_diff.launch" />
 
   <!-- Set cmd_vel mux to listen to cmd_vel instead of teleop -->
-  <node name="mux_select" pkg="topic_tools" type="mux_select" args="mux cmd_vel"/>
+  <!--node name="mux_select" pkg="topic_tools" type="mux_select" args="mux cmd_vel"/-->
  
   <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
     <rosparam file="$(find patrick_the_robot)/param/costmap_common_params.yaml" command="load" ns="global_costmap" />

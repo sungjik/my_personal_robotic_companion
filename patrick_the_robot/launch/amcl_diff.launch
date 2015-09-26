@@ -1,4 +1,3 @@
-source : https://code.google.com/p/drh-robotics-ros/source/browse/trunk/ros/ardros/launch/amcl_diff.launch
 <launch>
 	<node pkg="amcl" type="amcl" name="amcl" output="screen">
 		<!-- Publish scans from best pose at a max of 10 Hz -->

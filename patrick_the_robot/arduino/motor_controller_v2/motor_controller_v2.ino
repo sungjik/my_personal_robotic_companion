@@ -28,12 +28,12 @@
 #define encodPinB1      8     // encoder B pin
 #define encodPinA2      2
 #define encodPinB2      7
-#define LOOPTIME        10   // PID loop time(ms)
+#define LOOPTIME        100   // PID loop time(ms)
 #define encoder_pulse   13
 #define gear_ratio      20
-#define wheel_diameter  0.065 //m
+#define wheel_diameter  0.069 //m
 #define wheel_width     27
-#define axis_length     0.21  //m
+#define axis_length     0.276  //m
 #define max_RPM         298
 #define pi              3.14159265
 
@@ -76,12 +76,12 @@ void handle_cmd( const geometry_msgs::Twist& cmd_msg) {
   }
   else if (x == 0) {
     // convert rad/s to rpm
-    rpm_req2 = z*axis_length*60/(2*pi*2);
+    rpm_req2 = z*axis_length*60/(wheel_diameter*pi*2);
     rpm_req1 = -rpm_req2;
   }
   else {
-    rpm_req1 = x*60/(pi*wheel_diameter)-z*axis_length*60/(2*pi*2);
-    rpm_req2 = x*60/(pi*wheel_diameter)+z*axis_length*60/(2*pi*2);
+    rpm_req1 = x*60/(pi*wheel_diameter)-z*axis_length*60/(wheel_diameter*pi*2);
+    rpm_req2 = x*60/(pi*wheel_diameter)+z*axis_length*60/(wheel_diameter*pi*2);
   }
   if (rpm_req1 >= 0) direction1 = FORWARD;
   else direction1 = BACKWARD;
@@ -136,7 +136,7 @@ void loop() {
     motor2->run(direction2);
     lastMilli = time;
   }
-  if(time-lastMilliPub >= LOOPTIME*10) {
+  if(time-lastMilliPub >= LOOPTIME) {
    // publishOdom(time-lastMilliPub);
     publishRPM(time-lastMilliPub);
     lastMilliPub = time;
