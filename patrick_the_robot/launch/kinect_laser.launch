@@ -14,7 +14,7 @@
     <node pkg="depthimage_to_laserscan" type="depthimage_to_laserscan" name="depthimage_to_laserscan">
 
       <!-- Pixel rows to use to generate the laserscan. For each column, the scan will return the minimum value for those pixels centered vertically in the image. -->
-      <param name="scan_height" value="10"/>
+      <param name="scan_height" value="5"/>
       <param name="output_frame_id" value="/$(arg camera)_depth_frame"/>
       <param name="range_min" value="0.45"/>
       <param name="scan_time" value="0.1"/>

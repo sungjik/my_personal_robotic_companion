@@ -1,0 +1,4 @@
+<launch>
+  <include file="$(find patrick_the_robot)/launch/patrick_urdf.launch"/>
+  <node pkg="rviz" type="rviz" name="rviz" args="-d $(find patrick_the_robot)/launch/rviz/laser.rviz"/>
+</launch>
