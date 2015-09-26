@@ -22,10 +22,10 @@
         <param name="str" value="0.01"/>
         <param name="stt" value="0.02"/>
         <param name="linearUpdate" value="0.25"/>     <!-- param name="linearUpdate" value="0.5"/-->
-        <param name="angularUpdate" value="0.25"/>   <!--param name="angularUpdate" value="0.436"/-->
+        <param name="angularUpdate" value="0.45"/>   <!--param name="angularUpdate" value="0.436"/-->
         <param name="temporalUpdate" value="-1.0"/>
         <param name="resampleThreshold" value="0.5"/>
-        <param name="particles" value="100"/>
+        <param name="particles" value="50"/>
         <param name="xmin" value="-50.0"/>
         <param name="ymin" value="-50.0"/>
         <param name="xmax" value="50.0"/>
