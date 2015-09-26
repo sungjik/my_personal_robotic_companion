@@ -126,8 +126,7 @@ void loop() {
     getMotorData(time-lastMilli);
     PWM_val1 = updatePid(1, PWM_val1, rpm_req1, rpm_act1);
     PWM_val2 = updatePid(2, PWM_val2, rpm_req2, rpm_act2);
-    motor1->setSpeed(abs(PWM_val1));
-    motor2->setSpeed(abs(PWM_val2));
+
     if(PWM_val1 > 0) direction1 = FORWARD;
     else if(PWM_val1 < 0) direction1 = BACKWARD;
     if (rpm_req1 == 0) direction1 = RELEASE;
@@ -136,6 +135,10 @@ void loop() {
     if (rpm_req2 == 0) direction2 = RELEASE;
     motor1->run(direction1);
     motor2->run(direction2);
+
+    motor1->setSpeed(abs(PWM_val1));
+    motor2->setSpeed(abs(PWM_val2));
+    
     publishRPM(time-lastMilli);
     lastMilli = time;
   }
