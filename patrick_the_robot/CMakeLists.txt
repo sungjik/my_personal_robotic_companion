@@ -96,7 +96,7 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-include_directories(arduino/motor_controller_v3)
+include_directories(arduino/motor_controller)
 include_directories(
   ${catkin_INCLUDE_DIRS}
 )
