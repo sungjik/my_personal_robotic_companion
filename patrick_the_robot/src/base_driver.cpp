@@ -85,7 +85,7 @@ int main(int argc, char** argv){
   ros::Rate r(rate);
   while(n.ok()){
     ros::spinOnce();
-    ros::topic::waitForMessage<geometry_msgs::Vector3Stamped>("rpm", n, d);
+    // ros::topic::waitForMessage<geometry_msgs::Vector3Stamped>("rpm", n, d);
     current_time = ros::Time::now();
     dt = rpm_dt;
     dxy_ave = (rpm_act1+rpm_act2)*dt*wheel_diameter*pi/(60*2);
