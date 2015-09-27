@@ -4,7 +4,7 @@
   <!-- Run patrick -->
   <include file="$(find patrick_the_robot)/launch/patrick_urdf.launch" />
   <!-- Run the map server -->
-  <node name="map_server" pkg="map_server" type="map_server" args="$(find patrick_the_robot)/maps/map3.pgm 0.05"/>
+  <node name="map_server" pkg="map_server" type="map_server" args="$(find patrick_the_robot)/maps/map4.pgm 0.05"/>
 
   <!-- Run AMCL -->
   <include file="$(find amcl)/examples/amcl_diff.launch" />

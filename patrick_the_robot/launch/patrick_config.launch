@@ -22,10 +22,10 @@
   <node name="base_driver_node" pkg="patrick_the_robot" type="base_driver">
     <param name="publish_tf" value="true" />
     <param name="publish_rate" value="10.0" />
-    <param name="linear_scale_positive" value="0.95" />
+    <param name="linear_scale_positive" value="0.99" />
     <param name="linear_scale_negative" value="0.99" />
     <param name="angular_scale_positive" value="1.0" />
-    <param name="angular_scale_negative" value="0.995" />
+    <param name="angular_scale_negative" value="1.0" />
     <param name="angular_scale_accel" value="0.0" />
     <param name="alpha" value="0.5" />
     <param name="use_imu" value="true" />
