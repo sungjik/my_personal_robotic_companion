@@ -11,6 +11,7 @@ TrajectoryPlannerROS:
 
   holonomic_robot: false
 
-  meter_scoring: true
-  dwa: true
+  meter_scoring: false
+  dwa: false
   publish_cost_grid_pc: true
+  controller_frequency: 10.0

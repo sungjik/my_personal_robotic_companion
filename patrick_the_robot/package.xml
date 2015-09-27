@@ -1,26 +1,24 @@
 <?xml version="1.0"?>
 <package>
   <name>patrick_the_robot</name>
-  <version>0.0.0</version>
+  <version>1.0.0</version>
   <description>The patrick_the_robot package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag --> 
   <!-- Example:  -->
   <!-- <maintainer email="jane.doe@example.com">Jane Doe</maintainer> -->
-  <maintainer email="sung@todo.todo">sung</maintainer>
-
+  <maintainer email="sungwood@gmail.com">sung</maintainer>
 
   <!-- One license tag required, multiple allowed, one license per tag -->
   <!-- Commonly used license strings: -->
   <!--   BSD, MIT, Boost Software License, GPLv2, GPLv3, LGPLv2.1, LGPLv3 -->
-  <license>TODO</license>
+  <license>BSD</license>
 
 
   <!-- Url tags are optional, but mutiple are allowed, one per tag -->
   <!-- Optional attribute type can be: website, bugtracker, or repository -->
   <!-- Example: -->
-  <!-- <url type="website">http://wiki.ros.org/patrick_the_robot</url> -->
-
+  <url type="website">http://github.com/sungjik/patrick_the_robot</url>
 
   <!-- Author tags are optional, mutiple are allowed, one per tag -->
   <!-- Authors do not have to be maintianers, but could be -->

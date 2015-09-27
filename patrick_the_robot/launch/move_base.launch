@@ -18,6 +18,7 @@
     <rosparam file="$(find patrick_the_robot)/param/local_costmap_params.yaml" command="load" />
     <rosparam file="$(find patrick_the_robot)/param/global_costmap_params.yaml" command="load" />
     <rosparam file="$(find patrick_the_robot)/param/base_local_planner_params.yaml" command="load" />
+    <param name="controller_frequency" value="10.0"/>
   </node>
 
   <node pkg="rviz" type="rviz" name="rviz" args="-d $(find patrick_the_robot)/launch/rviz/amcl.rviz"/>

@@ -37,7 +37,7 @@ void handle_gyro( const geometry_msgs::Vector3& gyro) {
 }
 
 int main(int argc, char** argv){
-  ros::init(argc, argv, "base_driver");
+  ros::init(argc, argv, "base_controller");
 
   ros::NodeHandle n;
   ros::NodeHandle nh_private_("~");

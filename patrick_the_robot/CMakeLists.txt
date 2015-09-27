@@ -166,7 +166,5 @@ include_directories(
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
 
-add_executable(base_driver src/base_driver.cpp)
-add_executable(laser_buffer src/laser_buffer.cpp)
-target_link_libraries(base_driver ${catkin_LIBRARIES})
-target_link_libraries(laser_buffer ${catkin_LIBRARIES})
+add_executable(base_controller src/base_controller.cpp)
+target_link_libraries(base_controller ${catkin_LIBRARIES})
