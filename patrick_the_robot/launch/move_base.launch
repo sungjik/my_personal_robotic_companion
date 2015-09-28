@@ -17,7 +17,7 @@
     <rosparam file="$(find patrick_the_robot)/param/costmap_common_params.yaml" command="load" ns="local_costmap" />
     <rosparam file="$(find patrick_the_robot)/param/local_costmap_params.yaml" command="load" />
     <rosparam file="$(find patrick_the_robot)/param/global_costmap_params.yaml" command="load" />
-    <rosparam file="$(find patrick_the_robot)/param/dwa_local_planner_params.yaml" command="load" />
+    <rosparam file="$(find patrick_the_robot)/param/base_local_planner_params.yaml" command="load" />
     <rosparam file="$(find patrick_the_robot)/param/move_base_params.yaml" command="load" />
     <rosparam file="$(find patrick_the_robot)/param/global_planner_params.yaml" command="load" />
     <rosparam file="$(find patrick_the_robot)/param/navfn_global_planner_params.yaml" command="load" />

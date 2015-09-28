@@ -25,11 +25,11 @@ DWAPlannerROS:
 # Forward Simulation Parameters
   sim_time: 1.5 # 1.7
   vx_samples: 10 # 3
-  vy_samples: 1 # diff drive robot, there is only one sample
-  vtheta_samples: 20 # 20
+  vy_samples: 2 # diff drive robot, there is only one sample
+  vtheta_samples: 40 # 20
 
 # Trajectory Scoring Parameters
-  path_distance_bias: 64.0 # 32.0 - weighting for how much it should stick to the global path plan
+  path_distance_bias: 32.0 # 32.0 - weighting for how much it should stick to the global path plan
   goal_distance_bias: 24.0 # 24.0 - wighting for how much it should attempt to reach its goal
   occdist_scale: 0.5 # 0.01 - weighting for how much the controller should avoid obstacles
   forward_point_distance: 0.325 # 0.325 - how far along to place an additional scoring point
@@ -45,5 +45,5 @@ DWAPlannerROS:
   publish_cost_grid_pc: true
   global_frame_id: /odom
 
- Differential-drive robot configuration - necessary?
-# holonomic_robot: false
+# Differential-drive robot configuration - necessary?
+  holonomic_robot: false

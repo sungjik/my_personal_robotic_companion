@@ -3,12 +3,9 @@ Panels:
     Help Height: 0
     Name: Displays
     Property Tree Widget:
-      Expanded:
-        - /Global Options1
-        - /Status1
-        - /Cost Cloud1
+      Expanded: ~
       Splitter Ratio: 0.572327
-    Tree Height: 265
+    Tree Height: 402
   - Class: rviz/Selection
     Name: Selection
   - Class: rviz/Tool Properties
@@ -49,7 +46,7 @@ Visualization Manager:
       Plane Cell Count: 10
       Reference Frame: base_link
       Value: true
-    - Alpha: 1
+    - Alpha: 0.9
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
         Max Value: 10
@@ -60,31 +57,31 @@ Visualization Manager:
       Class: rviz/LaserScan
       Color: 255; 255; 255
       Color Transformer: Intensity
-      Decay Time: 0
+      Decay Time: 0.1
       Enabled: true
       Invert Rainbow: false
       Max Color: 255; 255; 255
-      Max Intensity: 58.041
-      Min Color: 0; 0; 0
-      Min Intensity: 52.4622
+      Max Intensity: 51.7348
+      Min Color: 255; 0; 0
+      Min Intensity: 50.2358
       Name: LaserScan
       Position Transformer: XYZ
       Queue Size: 10
       Selectable: true
       Size (Pixels): 3
-      Size (m): 0.01
+      Size (m): 0.03
       Style: Flat Squares
       Topic: /scan
       Use Fixed Frame: true
       Use rainbow: true
       Value: true
     - Class: rviz/Axes
-      Enabled: true
+      Enabled: false
       Length: 0.34
       Name: Axes
       Radius: 0.02
       Reference Frame: base_link
-      Value: true
+      Value: false
     - Alpha: 1
       Class: rviz/RobotModel
       Collision Enabled: false
@@ -166,6 +163,35 @@ Visualization Manager:
         Y: 0
         Z: 0
       Topic: /move_base/TrajectoryPlannerROS/global_plan
+      Value: true
+    - Alpha: 0.5
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 10
+        Min Value: -10
+        Value: true
+      Axis: Z
+      Channel Name: total_cost
+      Class: rviz/PointCloud2
+      Color: 255; 255; 255
+      Color Transformer: Intensity
+      Decay Time: 0
+      Enabled: true
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Max Intensity: 57.6
+      Min Color: 0; 0; 0
+      Min Intensity: 2.8
+      Name: Cost Cloud
+      Position Transformer: XYZ
+      Queue Size: 10
+      Selectable: true
+      Size (Pixels): 3
+      Size (m): 0.05
+      Style: Flat Squares
+      Topic: /move_base/TrajectoryPlannerROS/cost_cloud
+      Use Fixed Frame: true
+      Use rainbow: true
       Value: true
     - Alpha: 1
       Buffer Length: 1
@@ -249,37 +275,38 @@ Visualization Manager:
         Planner Plan: true
         Robot Footprint: true
         RobotModel: true
+        Trajectory Cloud: true
         Value: true
       Zoom Factor: 1
-    - Alpha: 0.5
+    - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
         Max Value: 10
         Min Value: -10
         Value: true
       Axis: Z
-      Channel Name: total_cost
+      Channel Name: intensity
       Class: rviz/PointCloud2
       Color: 255; 255; 255
-      Color Transformer: Intensity
+      Color Transformer: ""
       Decay Time: 0
-      Enabled: true
+      Enabled: false
       Invert Rainbow: false
       Max Color: 255; 255; 255
-      Max Intensity: 3.68
+      Max Intensity: 4096
       Min Color: 0; 0; 0
       Min Intensity: 0
-      Name: Cost Cloud
-      Position Transformer: XYZ
+      Name: Trajectory Cloud
+      Position Transformer: ""
       Queue Size: 10
       Selectable: true
       Size (Pixels): 3
-      Size (m): 0.05
+      Size (m): 0.01
       Style: Flat Squares
-      Topic: /move_base/TrajectoryPlannerROS/cost_cloud
+      Topic: /move_base/DWAPlannerROS/trajectory_cloud
       Use Fixed Frame: true
       Use rainbow: true
-      Value: true
+      Value: false
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -312,7 +339,7 @@ Visualization Manager:
         Value: false
       Name: Current View
       Near Clip Distance: 0.01
-      Scale: 135.592
+      Scale: 79.5038
       Target Frame: <Fixed Frame>
       Value: TopDownOrtho (rviz)
       X: 50.7798
@@ -326,7 +353,7 @@ Window Geometry:
   Height: 711
   Hide Left Dock: false
   Hide Right Dock: true
-  QMainWindow State: 000000ff00000000fd00000004000000000000014000000159fc0200000008fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000006e00fffffffb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c00610079007301000000f800000159000000f200fffffffb0000000a0049006d0061006700650200000220000001310000013c00000174fb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261000000010000012700000208fc0200000004fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730000000049000000970000006e00fffffffb0000000a0056006900650077007300000000e60000016b000000ca00fffffffb0000001e0054006f006f006c002000500072006f0070006500720074006900650073010000014f000001920000000000000000fb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000556000000a9fc0100000003fb0000000c00430061006d0065007200610100000000000005560000007c00fffffffb0000000c00430061006d0065007200610100000000000005560000000000000000fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000005560000004afc0100000002fb0000000800540069006d00650100000000000005560000040100fffffffb0000000800540069006d00650100000000000004500000000000000000000004100000015900000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd00000004000000000000024300000208fc0200000008fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000006e00fffffffb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afc00000049000002080000011801000025fa000000000100000002fb0000000c00430061006d0065007200610100000000ffffffff0000007c00fffffffb000000100044006900730070006c0061007900730100000000000001400000012700fffffffb0000000a0049006d0061006700650200000220000001310000013c00000174fb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261000000010000012700000208fc0200000004fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730000000049000000970000006e00fffffffb0000000a0056006900650077007300000000e60000016b000000ca00fffffffb0000001e0054006f006f006c002000500072006f0070006500720074006900650073010000014f000001920000000000000000fb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000556000000a9fc0100000002fb0000000c00430061006d0065007200610100000000000005560000000000000000fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000005560000004afc0100000002fb0000000800540069006d00650100000000000005560000040100fffffffb0000000800540069006d006501000000000000045000000000000000000000030d0000020800000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Selection:
     collapsed: false
   Time:

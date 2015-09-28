@@ -170,7 +170,7 @@ int main(int argc, char** argv){
     vth = (dt == 0)? 0 : dth/dt;
     odom_msg.child_frame_id = base_link;
     odom_msg.twist.twist.linear.x = vx;
-    odom_msg.twist.twist.linear.y = theta;
+    odom_msg.twist.twist.linear.y = 0.0;
     odom_msg.twist.twist.angular.z = dth;
 
     odom_pub.publish(odom_msg);

@@ -1,5 +1,27 @@
 <launch>
-  <include file="$(find patrick_the_robot)/launch/patrick_config.launch"/>
+  <!--serial communication between arduino and pc via usb /-->
+  <node name="arduino_serial_node" pkg="rosserial_python" type="serial_node.py" output="screen">
+    <param name="port" value="/dev/ttyACM0" />
+    <param name="baud" value="57600" />
+  </node>
+
+  <node name="imu_node" pkg="patrick_the_robot" type="gyro.py" output="screen">
+    <param name="host" value="192.168.42.185" />
+    <param name="num_callibration_itrs" value="0" />
+    <param name="debug" value="false" />
+  </node>
+
+  <node name="base_controller_node" pkg="patrick_the_robot" type="base_controller">
+    <param name="publish_tf" value="true" />
+    <param name="publish_rate" value="10.0" />
+    <param name="linear_scale_positive" value="0.99" />
+    <param name="linear_scale_negative" value="0.99" />
+    <param name="angular_scale_positive" value="1.0" />
+    <param name="angular_scale_negative" value="1.0" />
+    <param name="angular_scale_accel" value="0.0" />
+    <param name="alpha" value="0.5" />
+    <param name="use_imu" value="true" />
+  </node>
 
   <node name="velocityLogger" pkg="patrick_the_robot" type="velocityLogger.py" output="screen"/>
 
