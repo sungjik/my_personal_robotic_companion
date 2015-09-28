@@ -6,15 +6,15 @@
 		<param name="transform_tolerance" value="0.2" />
 		<param name="gui_publish_rate" value="10.0"/> <!-- Maximum rate (Hz) at which scans and paths are published for visualization, -1.0 to disable. -->
 		<param name="laser_max_beams" value="60"/>
-		<param name="min_particles" value="1000"/>
-		<param name="max_particles" value="10000"/>
+		<param name="min_particles" value="500"/>
+		<param name="max_particles" value="2000"/>
 		<param name="kld_err" value="0.05"/>
 		<param name="kld_z" value="0.99"/>
-		<param name="odom_alpha1" value="0.5"/> <!-- Specifies the expected noise in odometry's rotation estimate from the rotational component of the robot's motion. -->
-		<param name="odom_alpha2" value="0.2"/> <!-- Specifies the expected noise in odometry's rotation estimate from translational component of the robot's motion. -->
+		<param name="odom_alpha1" value="0.1"/> <!-- Specifies the expected noise in odometry's rotation estimate from the rotational component of the robot's motion. -->
+		<param name="odom_alpha2" value="0.1"/> <!-- Specifies the expected noise in odometry's rotation estimate from translational component of the robot's motion. -->
 		<!-- translation std dev, m -->
-		<param name="odom_alpha3" value="0.2"/> <!-- Specifies the expected noise in odometry's translation estimate from the translational component of the robot's motion. -->
-		<param name="odom_alpha4" value="0.5"/> <!-- Specifies the expected noise in odometry's translation estimate from the rotational component of the robot's motion. -->
+		<param name="odom_alpha3" value="0.1"/> <!-- Specifies the expected noise in odometry's translation estimate from the translational component of the robot's motion. -->
+		<param name="odom_alpha4" value="0.1"/> <!-- Specifies the expected noise in odometry's translation estimate from the rotational component of the robot's motion. -->
 		<param name="laser_z_hit" value="0.5"/>
 		<param name="laser_z_short" value="0.05"/>
 		<param name="laser_z_max" value="0.05"/>

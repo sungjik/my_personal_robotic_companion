@@ -52,10 +52,8 @@ int main(int argc, char** argv){
   double angular_scale_positive = 1.0;
   double angular_scale_negative = 1.0;
   double angular_scale_accel = 1.0;
-  double acc_theta = 0.0;
-  double acc_x = 0.0;
-  double acc_max_theta = 0.0;
-  double acc_max_x = 0.0;
+  double accel = 0.0;
+  double max_accel = 0.0;
   double alpha = 0.0;
   bool publish_tf = true;
   bool use_imu = false;
@@ -67,7 +65,6 @@ int main(int argc, char** argv){
   double dth = 0.0;
   double dth_prev = 0.0;
   double dth_curr = 0.0;
-  double dxy_prev = 0.0;
   double dxy_ave = 0.0;
   double vx = 0.0;
   double vy = 0.0;
@@ -92,9 +89,15 @@ int main(int argc, char** argv){
     current_time = ros::Time::now();
     dt = rpm_dt;
     dxy_ave = (rpm_act1+rpm_act2)*dt*wheel_diameter*pi/(60*2);
+    dth_prev = dth_curr;
     dth_odom = (rpm_act2-rpm_act1)*dt*wheel_diameter*pi/(60*track_width);
 
+    //accel = std::abs(dth_curr-dth_prev);
+    //max_accel = std::max(accel, max_accel);
+    //dth = (1-alpha)*dth_curr+alpha*dth_prev;
+
     if (use_imu) dth_gyro = dt*gyro_z;
+
     dth = alpha*dth_odom + (1-alpha)*dth_gyro;
 
     if (dth > 0) dth *= angular_scale_positive;

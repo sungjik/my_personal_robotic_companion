@@ -6,10 +6,8 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
-        - /Global Plan1
-        - /Local Plan1
-        - /Planner Plan1
-      Splitter Ratio: 0.496746
+        - /Cost Cloud1
+      Splitter Ratio: 0.572327
     Tree Height: 265
   - Class: rviz/Selection
     Name: Selection
@@ -66,9 +64,9 @@ Visualization Manager:
       Enabled: true
       Invert Rainbow: false
       Max Color: 255; 255; 255
-      Max Intensity: 52.8099
+      Max Intensity: 58.041
       Min Color: 0; 0; 0
-      Min Intensity: 51.4993
+      Min Intensity: 52.4622
       Name: LaserScan
       Position Transformer: XYZ
       Queue Size: 10
@@ -141,13 +139,13 @@ Visualization Manager:
       Name: Map
       Topic: /map
       Value: true
-    - Arrow Length: 0.3
+    - Arrow Length: 0.1
       Class: rviz/PoseArray
       Color: 255; 25; 0
-      Enabled: false
+      Enabled: true
       Name: Particle Cloud
       Topic: /particlecloud
-      Value: false
+      Value: true
     - Alpha: 1
       Class: rviz/Polygon
       Color: 255; 25; 0
@@ -211,10 +209,10 @@ Visualization Manager:
       Shape: Arrow
       Topic: /move_base/current_goal
       Value: true
-    - Alpha: 0.9
+    - Alpha: 0.7
       Class: rviz/Map
       Color Scheme: costmap
-      Draw Behind: true
+      Draw Behind: false
       Enabled: true
       Name: Local Costmap
       Topic: /move_base/local_costmap/costmap
@@ -253,22 +251,22 @@ Visualization Manager:
         RobotModel: true
         Value: true
       Zoom Factor: 1
-    - Alpha: 1
+    - Alpha: 0.5
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
         Max Value: 10
         Min Value: -10
         Value: true
       Axis: Z
-      Channel Name: intensity
+      Channel Name: total_cost
       Class: rviz/PointCloud2
       Color: 255; 255; 255
       Color Transformer: Intensity
       Decay Time: 0
-      Enabled: false
+      Enabled: true
       Invert Rainbow: false
       Max Color: 255; 255; 255
-      Max Intensity: 4096
+      Max Intensity: 3.68
       Min Color: 0; 0; 0
       Min Intensity: 0
       Name: Cost Cloud
@@ -276,12 +274,12 @@ Visualization Manager:
       Queue Size: 10
       Selectable: true
       Size (Pixels): 3
-      Size (m): 0.01
+      Size (m): 0.05
       Style: Flat Squares
       Topic: /move_base/TrajectoryPlannerROS/cost_cloud
       Use Fixed Frame: true
       Use rainbow: true
-      Value: false
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -305,7 +303,7 @@ Visualization Manager:
   Value: true
   Views:
     Current:
-      Angle: 0.0500001
+      Angle: 0.00500009
       Class: rviz/TopDownOrtho
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.06
@@ -314,7 +312,7 @@ Visualization Manager:
         Value: false
       Name: Current View
       Near Clip Distance: 0.01
-      Scale: 171.277
+      Scale: 135.592
       Target Frame: <Fixed Frame>
       Value: TopDownOrtho (rviz)
       X: 50.7798

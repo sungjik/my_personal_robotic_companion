@@ -1,8 +1,7 @@
 <launch>
-  <node name="arduino_serial_node" pkg="rosserial_python" type="serial_node.py" output="screen">
-    <param name="port" value="/dev/ttyACM0" />
-    <param name="baud" value="57600" />
-  </node>
+  <include file="$(find patrick_the_robot)/launch/patrick_config.launch"/>
+
+  <node name="velocityLogger" pkg="patrick_the_robot" type="velocityLogger.py" output="screen"/>
 
   <node name="teleop" pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" output="screen"/>
 </launch>
