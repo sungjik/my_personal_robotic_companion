@@ -25,5 +25,5 @@
 
   <node name="velocityLogger" pkg="patrick_the_robot" type="velocityLogger.py" output="screen"/>
 
-  <node name="teleop" pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" output="screen"/>
+  <node name="teleop" pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" output="screen" launch-prefix="xterm -e"/>
 </launch>
