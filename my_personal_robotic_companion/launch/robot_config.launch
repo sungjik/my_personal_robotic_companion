@@ -1,0 +1,46 @@
+<launch>
+  <node pkg="tf" type="static_transform_publisher" name="base_to_kinect_broadcaster" args="-0.17 0.04 0.1975 0 0 0 \/base_link \/camera_link 100" />
+ 
+  <!--we use the kinect sensor as a fake laser scanner /-->
+  <include file="$(find my_personal_robotic_companion)/launch/kinect_laser.launch" />
+
+  <!-- cmd_vel mux for prioritizing cmd_vel topics /-->
+  <!--node name="mux" pkg="topic_tools" type="mux" args="cmd_vel_mux teleop_cmd_vel cmd_vel"/-->
+
+  <!--serial communication between arduino and pc via usb /-->
+  <node name="arduino_serial_node" pkg="rosserial_python" type="serial_node.py" output="screen">
+    <param name="port" value="/dev/ttyACM0" />
+    <param name="baud" value="57600" />
+  </node>
+
+  <node name="imu_node" pkg="my_personal_robotic_companion" type="gyro.py" output="screen">
+    <param name="host" value="192.168.42.185" />
+    <param name="num_callibration_itrs" value="0" />
+    <param name="debug" value="false" />
+  </node>
+
+  <node name="base_controller_node" pkg="my_personal_robotic_companion" type="base_controller">
+    <param name="publish_tf" value="true" />
+    <param name="publish_rate" value="10.0" />
+    <param name="linear_scale_positive" value="0.99" />
+    <param name="linear_scale_negative" value="0.99" />
+    <param name="angular_scale_positive" value="1.0" />
+    <param name="angular_scale_negative" value="1.0" />
+    <param name="angular_scale_accel" value="0.0" />
+    <param name="alpha" value="0.5" />
+    <param name="use_imu" value="true" />
+  </node>
+
+  <!--node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf">
+    <remap from="imu" to="imu_data"/>
+    <param name="output_frame" value="/odom"/>
+    <param name="freq" value="10.0"/>
+    <param name="sensor_timeout" value="1.0"/>
+    <param name="odom_used" value="true"/>
+    <param name="imu_used" value="true"/>
+    <param name="vo_used" value="false"/>
+    <param name="debug" value="false"/>
+    <param name="self_diagnose" value="false"/>
+    <param name="base_footprint_frame" value="/base_link"/>
+  </node-->
+</launch>

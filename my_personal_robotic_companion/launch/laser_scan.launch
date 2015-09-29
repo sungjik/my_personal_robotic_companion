@@ -1,0 +1,7 @@
+<launch>
+  <include file="$(find my_personal_robotic_companion)/launch/urdf.launch"/>
+
+  <node name="teleop" pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" output="screen" launch-prefix="xterm -e"/>
+
+  <node pkg="rviz" type="rviz" name="rviz" args="-d $(find my_personal_robotic_companion)/launch/rviz/laser.rviz"/>
+</launch>

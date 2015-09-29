@@ -1,0 +1,29 @@
+<launch>
+  <master auto="start"/>
+
+  <!-- Run patrick -->
+  <include file="$(find my_personal_robotic_companion)/launch/urdf.launch" />
+  <!-- Run the map server -->
+  <node name="map_server" pkg="map_server" type="map_server" args="$(find patrick_the_robot)/maps/map4.pgm 0.05"/>
+
+  <!-- Run AMCL -->
+  <include file="$(find my_personal_robotic_companion)/launch/amcl_diff.launch" />
+
+  <!-- Set cmd_vel mux to listen to cmd_vel instead of teleop -->
+  <!--node name="mux_select" pkg="topic_tools" type="mux_select" args="mux cmd_vel"/-->
+
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <rosparam file="$(find my_personal_robotic_companion)/param/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find my_personal_robotic_companion)/param/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find my_personal_robotic_companion)/param/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find my_personal_robotic_companion)/param/global_costmap_params.yaml" command="load" />
+    <rosparam file="$(find my_personal_robotic_companion)/param/base_local_planner_params.yaml" command="load" />
+    <rosparam file="$(find my_personal_robotic_companion)/param/move_base_params.yaml" command="load" />
+    <rosparam file="$(find my_personal_robotic_companion)/param/global_planner_params.yaml" command="load" />
+    <rosparam file="$(find my_personal_robotic_companion)/param/navfn_global_planner_params.yaml" command="load" />
+  </node>
+
+  <node name="teleop" pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" output="screen" launch-prefix="xterm -e"/>
+
+  <node pkg="rviz" type="rviz" name="rviz" args="-d $(find my_personal_robotic_companion)/launch/rviz/amcl.rviz"/>
+</launch>
